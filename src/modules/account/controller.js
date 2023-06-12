@@ -4,7 +4,7 @@ import { ERROR } from '../../utils/enum.js'
 const login = async (req, res) => {
   try {
     if (Object.keys(req.query).length < 1 || req.query.username === undefined) {
-      res.status(400).json({ error: { message: ERROR.UID_NF } })
+      res.status(400).json({ error: { message: ERROR.UN_NF } })
     }
 
     const account = await db.client.query(`SELECT * FROM account WHERE username='${req.query.username}'`)
@@ -14,11 +14,11 @@ const login = async (req, res) => {
       res.status(200).json({
         username: account.rows[0].username,
         firstName: account.rows[0].first_name,
-        userType: account.rows[0].account_type,
+        accountType: account.rows[0].account_type,
         typeSpecificId: account.rows[0].account_type === 'employee' ? accountSubtype.rows[0].employee_id : accountSubtype.rows[0].client_id,
       })
     } else {
-      res.status(500).json({ error: { message: 'Username or Pin incorrect!' } })
+      res.status(500).json({ error: { message: ERROR.IC } })
     }
   } catch (err) {
     res.status(500).json(err)
@@ -33,21 +33,21 @@ const signup = async (req, res) => {
       firstName,
       lastName,
       pin,
-      userType
+      accountType
     } = req.query
 
-    if (username && firstName && pin && userType) {
-      await db.client.query(`INSERT INTO account VALUES ('${username}', '${firstName}', '${lastName}', ${pin}, '${userType}')`);
-      if (userType === 'employee') {
+    if (username && firstName && pin && accountType) {
+      await db.client.query(`INSERT INTO account VALUES ('${username}', '${firstName}', '${lastName}', ${pin}, '${accountType}')`);
+      if (accountType === 'employee') {
         await db.client.query(`INSERT INTO employee (role, username) VALUES ('manager', '${username}')`)
         res.status(200).json({})
       }
-      if (userType === 'client') {
+      if (accountType === 'client') {
         await db.client.query(`INSERT INTO client (age, username) VALUES (${Number(req.query.age)}, '${username}')`)
         res.status(200).json({})
       }
     } else {
-      res.status(500).json({ error: { message: 'Required fields are empty!' } })
+      res.status(500).json({ error: { message: ERROR.RFE } })
     }
   } catch (err) {
     res.status(500).json(err)
