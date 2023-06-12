@@ -10,12 +10,12 @@ const login = async (req, res) => {
     const account = await db.client.query(`SELECT * FROM account WHERE username='${req.query.username}'`)
 
     if (Number(req.query.pin) === Number(account.rows[0].pin)) {
-      const accountSubtype = await db.client.query(`SELECT * FROM ${account.rows[0].user_type} WHERE username='${req.query.username}'`);
+      const accountSubtype = await db.client.query(`SELECT * FROM ${account.rows[0].account_type} WHERE username='${req.query.username}'`);
       res.status(200).json({
         username: account.rows[0].username,
         firstName: account.rows[0].first_name,
-        userType: account.rows[0].user_type,
-        typeSpecificId: account.rows[0].user_type === 'employee' ? accountSubtype.rows[0].employee_id : accountSubtype.rows[0].client_id,
+        userType: account.rows[0].account_type,
+        typeSpecificId: account.rows[0].account_type === 'employee' ? accountSubtype.rows[0].employee_id : accountSubtype.rows[0].client_id,
       })
     } else {
       res.status(500).json({ error: { message: 'Username or Pin incorrect!' } })
