@@ -22,7 +22,10 @@ const startServer = () => {
 
 const main = async () => {
   await db.client.connect()
-    .then(startServer)
+    .then(() => {
+      console.log(`[#] Connected to Database ${process.env.DB_NAME} on port ${process.env.DB_PORT} [#]`);
+      startServer();
+    })
     .catch((err) => { console.log(`[#] Error connecting to database: ${err} [#]`) });
 }
 
