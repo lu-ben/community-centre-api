@@ -45,7 +45,7 @@ INSERT INTO program VALUES (1, 'Basketball Lesson', 'one-time', 1);
 INSERT INTO program VALUES (2, 'Badminton Lesson', 'one-time', 1);
 INSERT INTO program VALUES (3, 'Badminton Lesson', 'one-time', 1);
 INSERT INTO program VALUES (4, 'Basketball Lesson', 'one-time', 1);
-INSERT INTO program VALUES (5, 'Volleyball Lesson', 'one-time', 1);
+INSERT INTO program VALUES (5, 'Volleyball Lesson', 'one-time', 2);
 
 INSERT INTO drop_in VALUES (6, 'volleyball');
 INSERT INTO drop_in VALUES (7, 'badminton');
@@ -65,6 +65,11 @@ INSERT INTO event_sign_up VALUES (1, 2, '2023-06-11 17:16:00');
 INSERT INTO event_sign_up VALUES (1, 3, '2023-06-11 17:17:00');
 INSERT INTO event_sign_up VALUES (1, 4, '2023-06-11 17:18:00');
 INSERT INTO event_sign_up VALUES (1, 5, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (2, 1, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (2, 2, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (2, 3, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (2, 4, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (2, 5, '2023-06-11 17:19:00');
 
 INSERT INTO equipment VALUES (1, 'Frisbee', 'Gymnasium A');
 INSERT INTO equipment VALUES (2, 'Kan Jam Set', 'Gymnasium B');
@@ -103,6 +108,7 @@ INSERT INTO event_announcement VALUES (1, 2);
 INSERT INTO event_announcement VALUES (1, 3);
 INSERT INTO event_announcement VALUES (1, 4);
 INSERT INTO event_announcement VALUES (1, 5);
+INSERT INTO event_announcement VALUES (5, 1);
 
 INSERT INTO unscheduled_drop_in VALUES ('Weight Lifting', 'Weight Room');
 INSERT INTO unscheduled_drop_in VALUES ('Swimming', 'Swimming Pool');

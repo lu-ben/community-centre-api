@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import db from './config/db.js'
 
 import { accountRouter } from './modules/account/routes.js'
+import { dashboardRouter } from './modules/dashboard/routes.js';
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,7 @@ const startServer = () => {
     next();
   })
   app.use('/account', accountRouter)
+  app.use('/dashboard', dashboardRouter)
 }
 
 const main = async () => {
