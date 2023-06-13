@@ -10,7 +10,7 @@ const app = express();
 
 const startServer = () => {
   app.listen(process.env.API_PORT, () => console.log(`[#] Server started on port ${process.env.API_PORT} [#]`))
-  app.use((req, res, next) => {
+  app.use((_, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.header(
       'Access-Control-Allow-Headers',
