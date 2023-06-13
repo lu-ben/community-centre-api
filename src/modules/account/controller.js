@@ -33,13 +33,14 @@ const signup = async (req, res) => {
       firstName,
       lastName,
       pin,
-      accountType
+      accountType,
+      employeeRole,
     } = req.query
 
     if (username && firstName && pin && accountType) {
       await db.client.query(`INSERT INTO account VALUES ('${username}', '${firstName}', '${lastName}', ${pin}, '${accountType}')`);
       if (accountType === 'employee') {
-        await db.client.query(`INSERT INTO employee (role, username) VALUES ('manager', '${username}')`)
+        await db.client.query(`INSERT INTO employee (role, username) VALUES ('${employeeRole}', '${username}')`)
         res.status(200).json({})
       }
       if (accountType === 'client') {

@@ -3,7 +3,7 @@ CREATE TYPE event_type AS ENUM ('program', 'drop-in');
 CREATE TYPE role AS ENUM ('instructor', 'receptionist', 'manager');
 CREATE TYPE age_range AS ENUM ('child', 'youth', 'adult', 'all');
 CREATE TYPE program_frequency AS ENUM ('one-time', 'weekly', 'biweekly');
-CREATE TYPE drop_in_sport as ENUM ('basketball', 'volleyball', 'badminton', 'table tennis', 'pickleball');
+CREATE TYPE drop_in_sport AS ENUM ('basketball', 'volleyball', 'badminton', 'table tennis', 'pickleball');
 
 CREATE TABLE IF NOT EXISTS account (
   username VARCHAR(255) PRIMARY KEY,
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS drop_in (
 CREATE TABLE IF NOT EXISTS event_sign_up (
   client_id INT,
   event_id INT,
-  enroll_date TIMESTAMP,
+  enroll_date TIMESTAMP DEFAULT NOW(),
   PRIMARY KEY (client_id, event_id),
   FOREIGN KEY (client_id) REFERENCES client (client_id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES event (event_id) ON DELETE CASCADE

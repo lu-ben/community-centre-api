@@ -15,7 +15,7 @@ const getDashboard = async (req, res) => {
         e.facility_name AS subtitle,
         CASE WHEN e.event_type = 'program' THEN p.program_name
         ELSE CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in') END AS title
-      FROM (SELECT * FROM event_sign_up where client_id = 1) AS esu 
+      FROM (SELECT * FROM event_sign_up WHERE client_id = ${req.query.typeSpecificId}) AS esu 
       LEFT JOIN event e ON esu.event_id = e.event_id 
       LEFT JOIN program p ON e.event_id = p.event_id
       LEFT JOIN drop_in d ON d.event_id = e.event_id`
@@ -66,8 +66,14 @@ const getDashboard = async (req, res) => {
     const [eventAnnouncement, facilityAnnouncement, bulletinPosts, events] = await Promise.all(promiseArr)
 
     const tags = []
-    eventAnnouncement.rows.forEach((item) => tags.push(item.event_type === 'drop-in' ? `${item.sport.charAt(0).toUpperCase() + item.sport.slice(1)} Drop-in` : item.program_name))
-    facilityAnnouncement.rows.forEach((item) => tags.push(item.facility_name))
+    facilityAnnouncement.rows.forEach((item) => { if (item.facility_name) tags.push(item.facility_name) })
+    eventAnnouncement.rows.forEach((item) => {
+      if (item.event_type) {
+        tags.push(item.event_type === 'drop-in'
+          ? `${item.sport.charAt(0).toUpperCase() + item.sport.slice(1)} Drop-in`
+          : item.program_name)
+      }
+    })
 
     res.status(200).json({
       announcement: { ...eventAnnouncement.rows[0], tags },
