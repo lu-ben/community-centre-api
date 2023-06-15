@@ -55,6 +55,17 @@ INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES 
 INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-30 14:30:00', 20, 'Gymnasium B', 'drop-in');
 INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-30 15:30:00', 24, 'Gymnasium B', 'drop-in');
 
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 11:30:00', 20, 'Gymnasium A', 'program');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 12:30:00', 20, 'Gymnasium A', 'program');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('adult', '2023-06-13 13:30:00', 20, 'Gymnasium A', 'program');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 14:30:00', 20, 'Gymnasium A', 'program');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('adult', '2023-06-13 15:30:00', 20, 'Gymnasium A', 'program');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 11:30:00', 20, 'Gymnasium B', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 12:30:00', 24, 'Gymnasium B', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 13:30:00', 24, 'Gymnasium B', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 14:30:00', 20, 'Gymnasium B', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 15:30:00', 24, 'Gymnasium B', 'drop-in');
+
 /* ===== INSERT SECOND ===== */
 
 INSERT INTO program VALUES (1, 'Basketball Lesson', 'one-time', 1);
@@ -62,12 +73,22 @@ INSERT INTO program VALUES (2, 'Badminton Lesson', 'one-time', 1);
 INSERT INTO program VALUES (3, 'Badminton Lesson', 'one-time', 1);
 INSERT INTO program VALUES (4, 'Basketball Lesson', 'one-time', 1);
 INSERT INTO program VALUES (5, 'Volleyball Lesson', 'one-time', 2);
+INSERT INTO program VALUES (11, 'Basketball Lesson', 'one-time', 1);
+INSERT INTO program VALUES (12, 'Badminton Lesson', 'one-time', 1);
+INSERT INTO program VALUES (13, 'Badminton Lesson', 'one-time', 1);
+INSERT INTO program VALUES (14, 'Basketball Lesson', 'one-time', 1);
+INSERT INTO program VALUES (15, 'Volleyball Lesson', 'one-time', 2);
 
 INSERT INTO drop_in VALUES (6, 'volleyball');
 INSERT INTO drop_in VALUES (7, 'badminton');
 INSERT INTO drop_in VALUES (8, 'basketball');
 INSERT INTO drop_in VALUES (9, 'volleyball');
 INSERT INTO drop_in VALUES (10, 'badminton');
+INSERT INTO drop_in VALUES (16, 'volleyball');
+INSERT INTO drop_in VALUES (17, 'badminton');
+INSERT INTO drop_in VALUES (18, 'basketball');
+INSERT INTO drop_in VALUES (19, 'volleyball');
+INSERT INTO drop_in VALUES (20, 'badminton');
 
 INSERT INTO event_price VALUES ('child', 20, 3);
 INSERT INTO event_price VALUES ('youth', 20, 5);
@@ -86,6 +107,13 @@ INSERT INTO event_sign_up VALUES (2, 2, '2023-06-11 17:19:00');
 INSERT INTO event_sign_up VALUES (2, 3, '2023-06-11 17:19:00');
 INSERT INTO event_sign_up VALUES (2, 4, '2023-06-11 17:19:00');
 INSERT INTO event_sign_up VALUES (2, 5, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (1, 11, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (1, 12, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (1, 13, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (1, 14, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (1, 15, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (1, 16, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (1, 17, '2023-06-11 17:19:00');
 
 INSERT INTO equipment VALUES (1, 'Frisbee', 'Gymnasium A');
 INSERT INTO equipment VALUES (2, 'Kan Jam Set', 'Gymnasium B');

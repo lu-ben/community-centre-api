@@ -8,62 +8,58 @@ const getAnnouncement = async (req, res) => {
   }
 
   try {
-    const promiseArr = [
-      db.client.query(`
-        SELECT
-          a.announcement_id,
-          a.title,
-          a.message AS content,
-          a.created_at AS date,
-          CONCAT(ac.first_name, ' ', ac.last_name) AS subtitle,
-          p.program_name,
-          CASE WHEN e.event_type = 'drop-in' THEN CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in') END AS sport,
-          e.event_type
-        FROM
-          (SELECT * FROM announcement ORDER BY created_at DESC)
-        AS a
-        LEFT JOIN employee emp ON emp.employee_id = a.created_by
-        LEFT JOIN account ac ON ac.username = emp.username
-        LEFT JOIN event_announcement ea ON a.announcement_id = ea.announcement_id
-        LEFT JOIN event e ON e.event_id = ea.event_id
-        LEFT JOIN program p ON p.event_id = e.event_id
-        LEFT JOIN drop_in d ON d.event_id = e.event_id
-      `),
-      db.client.query(`
-        SELECT a.announcement_id, a.message as content, a.created_at as date, fa.facility_name, CONCAT(ac.first_name, ' ', ac.last_name) AS subtitle
-        FROM
-            (SELECT * FROM announcement ORDER BY created_at DESC) AS a
-        LEFT JOIN facility_announcement fa ON a.announcement_id = fa.announcement_id
-        LEFT JOIN employee emp ON emp.employee_id = a.created_by
-        LEFT JOIN account ac ON ac.username = emp.username
-      `),
-    ]
-
-    const [eventAnnouncement, facilityAnnouncement] = await Promise.all(promiseArr)
-    const announcements = [...eventAnnouncement.rows, ...facilityAnnouncement.rows]
+    const announcements = await db.client.query(`
+      (SELECT
+        a.announcement_id,
+        a.title,
+        a.message AS content,
+        a.created_at AS date,
+        CONCAT(ac.first_name, ' ', ac.last_name) AS subtitle,
+        CASE 
+          WHEN e.event_type = 'drop-in' THEN CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in')
+          WHEN e.event_type = 'program' then p.program_name
+          END AS tag_name
+      FROM announcement a 
+      LEFT JOIN employee emp ON emp.employee_id = a.created_by
+      LEFT JOIN account ac ON ac.username = emp.username
+      LEFT JOIN event_announcement ea ON a.announcement_id = ea.announcement_id
+      LEFT JOIN event e ON e.event_id = ea.event_id
+      LEFT JOIN program p ON p.event_id = e.event_id
+      LEFT JOIN drop_in d ON d.event_id = e.event_id)
+      UNION ALL
+      (SELECT 
+        a2.announcement_id, 
+        a2.title,
+        a2.message AS content, 
+        a2.created_at AS date,
+        CONCAT(ac2.first_name, ' ', ac2.last_name) AS subtitle,
+        fa.facility_name AS tag_name
+      FROM announcement a2
+      LEFT JOIN facility_announcement fa ON a2.announcement_id = fa.announcement_id
+      LEFT JOIN employee emp2 ON emp2.employee_id = a2.created_by
+      LEFT JOIN account ac2 ON ac2.username = emp2.username) 
+      ORDER BY date DESC
+    `)
 
     const result = {}
-    announcements.forEach((item) => {
-      if(result[item.announcement_id] !== undefined) {
-        if (item.program_name || item.sport || item.facility_name) {
-          result[item.announcement_id].tags.push(item.program_name || item.sport || item.facility_name)
-        }
+    announcements.rows.forEach((item) => {
+      if (result[item.announcement_id] !== undefined) {
+        if (item.tag_name) result[item.announcement_id].tags.push(item.tag_name)
       } else {
         let tags = []
-        if (item.program_name || item.sport || item.facility_name) tags.push(item.program_name || item.sport || item.facility_name)
+        if (item.tag_name) tags.push(item.tag_name)
         result[item.announcement_id] = {
-          ...item,
+          title: item.title,
+          content: item.content,
+          date: item.date,
+          subtitle: item.subtitle,
           tags,
         }
       }
     })
 
-    const orderedAnnouncements = Object.values(result).sort(function(a, b) {
-      return new Date(b.date) - new Date(a.date)
-    })
-
     res.status(200).json({
-      announcement: orderedAnnouncements,
+      announcement: Object.values(result),
     })
 
   } catch (err) {
