@@ -58,8 +58,12 @@ const getAnnouncement = async (req, res) => {
       }
     })
 
+    const orderedAnnouncements = Object.values(result).sort(function(a, b) {
+      return new Date(b.date) - new Date(a.date)
+    })
+
     res.status(200).json({
-      announcement: Object.values(result),
+      announcement: orderedAnnouncements,
     })
 
   } catch (err) {
