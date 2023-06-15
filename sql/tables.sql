@@ -137,5 +137,6 @@ CREATE TABLE IF NOT EXISTS go_to_unscheduled_drop_in (
   date TIMESTAMP,
   activity VARCHAR(255) NOT NULL,
   PRIMARY KEY (client_id, date),
-  FOREIGN KEY (activity) REFERENCES unscheduled_drop_in (activity) ON DELETE CASCADE
+  FOREIGN KEY (activity) REFERENCES unscheduled_drop_in (activity) ON DELETE CASCADE,
+  FOREIGN KEY (client_id) REFERENCES client (client_id) ON DELETE CASCADE
 );
