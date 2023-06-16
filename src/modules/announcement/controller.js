@@ -15,11 +15,11 @@ const getAnnouncement = async (req, res) => {
         a.message AS content,
         a.created_at AS date,
         CONCAT(ac.first_name, ' ', ac.last_name) AS subtitle,
-        CASE 
+        CASE
           WHEN e.event_type = 'drop-in' THEN CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in')
           WHEN e.event_type = 'program' then p.program_name
           END AS tag_name
-      FROM announcement a 
+      FROM announcement a
       LEFT JOIN employee emp ON emp.employee_id = a.created_by
       LEFT JOIN account ac ON ac.username = emp.username
       LEFT JOIN event_announcement ea ON a.announcement_id = ea.announcement_id
@@ -27,18 +27,18 @@ const getAnnouncement = async (req, res) => {
       LEFT JOIN program p ON p.event_id = e.event_id
       LEFT JOIN drop_in d ON d.event_id = e.event_id)
       UNION ALL
-      (SELECT 
-        a2.announcement_id, 
+      (SELECT
+        a2.announcement_id,
         a2.title,
-        a2.message AS content, 
+        a2.message AS content,
         a2.created_at AS date,
         CONCAT(ac2.first_name, ' ', ac2.last_name) AS subtitle,
         fa.facility_name AS tag_name
       FROM announcement a2
       LEFT JOIN facility_announcement fa ON a2.announcement_id = fa.announcement_id
       LEFT JOIN employee emp2 ON emp2.employee_id = a2.created_by
-      LEFT JOIN account ac2 ON ac2.username = emp2.username) 
-      ORDER BY date DESC
+      LEFT JOIN account ac2 ON ac2.username = emp2.username)
+      ORDER BY date ASC
     `)
 
     const result = {}
