@@ -1,12 +1,13 @@
 import db from '../../config/db.js'
 
 const getEquipment = async (req, res) => {
+
+    // const {equipment, facility} = req.query;
+
     try {
-        console.log(req.query.equipment);
+        console.log(req.query.facility);
         let filters = '';
         if (req.query.facility && !req.query.equipment) {
-            // Studio B 
-            // TODO: are we allowed to use LIKE?
             filters = `WHERE facility_name LIKE '${req.query.facility}'`
         } else if (req.query.facility && req.query.equipment) {
             filters = `WHERE facility_name LIKE '${req.query.facility}' AND equipment_name LIKE '${req.query.equipment}'`
@@ -29,6 +30,17 @@ const getEquipment = async (req, res) => {
     }
 }
 
+const getEquipmentOptions = async (req, res) => {
+    try {
+        const facilityOptions = await db.client.query(`SELECT facility_name FROM facility`);
+        res.status(200).json({ facilityOptions: facilityOptions.rows })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+}
+
 export default {
-    getEquipment
+    getEquipment,
+    getEquipmentOptions
 }
