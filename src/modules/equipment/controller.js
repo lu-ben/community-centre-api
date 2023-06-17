@@ -5,7 +5,7 @@ const getEquipment = async (req, res) => {
     // const {equipment, facility} = req.query;
 
     try {
-        console.log(req.query.facility);
+        // console.log(req.query.facility);
         let filters = '';
         if (req.query.facility && !req.query.equipment) {
             filters = `WHERE facility_name LIKE '${req.query.facility}'`
@@ -14,7 +14,7 @@ const getEquipment = async (req, res) => {
         } else if (!req.query.facility && req.query.equipment) {
             filters = `WHERE equipment_name LIKE '${req.query.equipment}'`
         }
-        console.log(filters);
+        // console.log(filters);
         const query = `SELECT
         equipment_name AS title,
         facility_name AS subtitle,
@@ -33,7 +33,8 @@ const getEquipment = async (req, res) => {
 const getEquipmentOptions = async (req, res) => {
     try {
         const facilityOptions = await db.client.query(`SELECT facility_name FROM facility`);
-        res.status(200).json({ facilityOptions: facilityOptions.rows })
+        const optionArr = facilityOptions.rows.map((option) => option.facility_name)
+        res.status(200).json({ facilityOptions: optionArr })
     } catch (err) {
         console.log(err);
         res.status(500).json(err);
