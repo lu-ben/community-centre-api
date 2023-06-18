@@ -7,6 +7,7 @@ import { dashboardRouter } from './modules/dashboard/routes.js';
 import { eventRouter } from './modules/event/routes.js';
 import { announcementRouter } from './modules/announcement/routes.js';
 import { bulletinRouter } from './modules/bulletin/routes.js';
+import { equipmentRouter } from './modules/equipment/routes.js';
 
 dotenv.config();
 const app = express();
@@ -26,6 +27,7 @@ const startServer = () => {
   app.use('/event', eventRouter)
   app.use('/announcement', announcementRouter)
   app.use('/bulletin', bulletinRouter)
+  app.use('/rental', equipmentRouter)
 }
 
 const main = async () => {
