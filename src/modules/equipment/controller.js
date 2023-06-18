@@ -2,27 +2,26 @@ import db from '../../config/db.js'
 
 const getEquipment = async (req, res) => {
     try {
-
-        // TODO: query for whether equipment is rented
-        const isRentedQuery = `SELECT * FROM borrow_equipment WHERE equipment_id = '${req.query.equipment_id}`
-
-        let filters = '';
-        if (req.query.facility && !req.query.equipment) {
-            filters = `WHERE facility_name LIKE '${req.query.facility}'`
-        } else if (req.query.facility && req.query.equipment) {
-            filters = `WHERE facility_name LIKE '${req.query.facility}' AND equipment_name LIKE '${req.query.equipment}'`
-        } else if (!req.query.facility && req.query.equipment) {
-            filters = `WHERE equipment_name LIKE '${req.query.equipment}'`
+        const { facility, equipment } = req.query
+        let filters = `WHERE equipment_id NOT IN (SELECT equipment_id FROM borrow_equipment) ${facility || equipment ? 'AND ' : ``}`;
+        // let filters = '';
+        if (facility && !equipment) {
+            filters += `facility_name = '${facility}'`
+        } else if (facility && equipment) {
+            filters += `facility_name = '${facility}' AND equipment_name LIKE '${equipment}'`
+        } else if (!facility && equipment) {
+            filters += `equipment_name LIKE '${equipment}'`
         }
+
         const query = `SELECT
         equipment_name AS title,
         facility_name AS subtitle,
         equipment_id AS date
         FROM equipment ${filters}
         `
-        const equipment = await db.client.query(query);
-        // console.log(equipment.rows);
-        res.status(200).json({ equipment: equipment.rows });
+
+        const equipmentData = await db.client.query(query);
+        res.status(200).json({ equipment: equipmentData.rows });
     } catch (err) {
         console.log(err);
         res.status(500).error(err);
