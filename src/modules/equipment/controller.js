@@ -1,11 +1,11 @@
 import db from '../../config/db.js'
 
 const getEquipment = async (req, res) => {
-
-    // const {equipment, facility} = req.query;
-
     try {
-        // console.log(req.query.facility);
+
+        // TODO: query for whether equipment is rented
+        const isRentedQuery = `SELECT * FROM borrow_equipment WHERE equipment_id = '${req.query.equipment_id}`
+
         let filters = '';
         if (req.query.facility && !req.query.equipment) {
             filters = `WHERE facility_name LIKE '${req.query.facility}'`
@@ -14,7 +14,6 @@ const getEquipment = async (req, res) => {
         } else if (!req.query.facility && req.query.equipment) {
             filters = `WHERE equipment_name LIKE '${req.query.equipment}'`
         }
-        // console.log(filters);
         const query = `SELECT
         equipment_name AS title,
         facility_name AS subtitle,
@@ -41,7 +40,21 @@ const getEquipmentOptions = async (req, res) => {
     }
 }
 
+const rentEquipment = async (req, res) => {
+
+    const client_id = req.query.client_id;
+    const equipment_id = req.query.equipment_id;
+
+    try {
+        await db.client.query(`INSERT INTO borrow_equipment (client_id, equipment_id, borrow_date, return_date) VALUES ('${client_id}', '${equipment_id}', CURRENT_TIMESTAMP, NULL)`);
+        res.status(200).json({});
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 export default {
     getEquipment,
-    getEquipmentOptions
+    getEquipmentOptions,
+    rentEquipment
 }
