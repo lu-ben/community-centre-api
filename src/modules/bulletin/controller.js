@@ -45,7 +45,7 @@ const createBulletin = async (req, res) => {
 
     if (title && content && req.query.typeSpecificId) {
       const result = await db.client.query(`INSERT INTO bulletin_post (title, content, created_by) VALUES ('${title}', '${content}', ${Number(req.query.typeSpecificId)}) RETURNING *`);
-      res.status(200).json({ bulletin: result.rows[0]});
+      res.status(200).json({ bulletin: result.rows[0] });
     } else {
       res.status(500).json({ error: { message: ERROR.RFE } })
     }
@@ -55,25 +55,25 @@ const createBulletin = async (req, res) => {
   }
 }
 
-const approveBulletin = async(req, res) => {
+const approveBulletin = async (req, res) => {
   try {
     if (req.query.typeSpecificId && req.query.postId) {
       const result = await db.client.query(`UPDATE bulletin_post SET is_public = true, approved_by = ${Number(req.query.typeSpecificId)} WHERE post_id = ${Number(req.query.postId)} RETURNING *`);
-      res.status(200).json({ bulletin: result.rows[0]})
+      res.status(200).json({ bulletin: result.rows[0] })
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
     res.status(500).json(err)
   }
 }
 
-const deleteBulletin = async(req, res) => {
+const deleteBulletin = async (req, res) => {
   try {
     if (req.query.postId) {
       const result = await db.client.query(`DELETE FROM bulletin_post WHERE post_id = ${Number(req.query.postId)} RETURNING *`);
-      res.status(200).json({ bulletin: result.rows[0]})
+      res.status(200).json({ bulletin: result.rows[0] })
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
     res.status(500).json(err)
   }
