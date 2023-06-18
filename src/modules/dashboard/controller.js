@@ -9,16 +9,18 @@ const getDashboard = async (req, res) => {
   }
 
   const eventQuery = req.query.accountType === 'employee'
-    ? `SELECT p.program_name AS title, e.facility_name AS subtitle, e.date FROM event e LEFT JOIN program p ON e.event_id = p.event_id WHERE instructed_by = ${Number(req.query.typeSpecificId)}`
+    ? `SELECT p.program_name AS title, e.facility_name AS subtitle, e.date FROM event e LEFT JOIN program p ON e.event_id = p.event_id WHERE instructed_by = ${Number(req.query.typeSpecificId)} AND DATE(e.date) > DATE(NOW()) ORDER BY e.date`
     : `SELECT
         e.date,
         e.facility_name AS subtitle,
         CASE WHEN e.event_type = 'program' THEN p.program_name
         ELSE CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in') END AS title
       FROM (SELECT * FROM event_sign_up WHERE client_id = ${req.query.typeSpecificId}) AS esu 
-      LEFT JOIN event e ON esu.event_id = e.event_id 
+      LEFT JOIN event e ON esu.event_id = e.event_id
       LEFT JOIN program p ON e.event_id = p.event_id
-      LEFT JOIN drop_in d ON d.event_id = e.event_id`
+      LEFT JOIN drop_in d ON d.event_id = e.event_id
+      WHERE DATE(e.date) > DATE(NOW())
+      ORDER BY e.date`
 
   try {
     const promiseArr = [

@@ -38,7 +38,6 @@ const getAnnouncement = async (req, res) => {
       LEFT JOIN facility_announcement fa ON a2.announcement_id = fa.announcement_id
       LEFT JOIN employee emp2 ON emp2.employee_id = a2.created_by
       LEFT JOIN account ac2 ON ac2.username = emp2.username)
-      ORDER BY date ASC
     `)
 
     const result = {}
@@ -58,8 +57,12 @@ const getAnnouncement = async (req, res) => {
       }
     })
 
+    const orderedAnnouncements = Object.values(result).sort(function (a, b) {
+      return new Date(b.date) - new Date(a.date)
+    })
+
     res.status(200).json({
-      announcement: Object.values(result),
+      announcement: orderedAnnouncements,
     })
 
   } catch (err) {

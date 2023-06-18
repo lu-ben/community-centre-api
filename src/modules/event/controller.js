@@ -36,7 +36,7 @@ const getEvents = async (req, res) => {
             ELSE CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in') END AS title
             FROM (
               SELECT DISTINCT event_id
-              FROM event
+              FROM event WHERE DATE(date) > DATE(NOW())
               EXCEPT
               SELECT DISTINCT event_id
               FROM event_sign_up
@@ -113,6 +113,109 @@ const getPastEvents = async (req, res) => {
   }
 }
 
+const getAllUpcomingEvents = async (req, res) => {
+  try {
+    const events = await db.client.query(`
+      SELECT 
+        e.event_id AS id,
+        e."age_range",
+        e."date",
+        e.capacity,
+        e.facility_name AS subtitle,
+        e."event_type",
+        COUNT(esu.client_id) AS sign_up_count,
+        CASE WHEN e.event_type = 'program' THEN p.program_name
+          ELSE CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in') 
+          END AS title,
+        CASE WHEN e.capacity > COUNT(esu.client_id) THEN false
+          WHEN e.capacity <= COUNT(esu.client_id) THEN true
+          END AS is_full
+        FROM event e
+        LEFT JOIN event_sign_up esu ON e.event_id = esu.event_id 
+        LEFT JOIN program p ON p.event_id = e.event_id
+        LEFT JOIN drop_in d ON d.event_id = e.event_id 
+        WHERE DATE(e.date) > DATE(NOW())
+        GROUP BY e.event_id, e."age_range", e."date", e.capacity, e.facility_name, e."event_type", p.program_name, d.sport
+        ORDER BY e.date`)
+    res.status(200).json({ events: events.rows })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+
+const getEventStats = async (req, res) => {
+  try {
+    const eventStats = await db.client.query(`
+      SELECT 
+        ROUND(AVG(esu.client_count), 0) AS average,
+        MAX(esu.client_count) AS max,
+        MIN(esu.client_count) AS min
+      FROM (SELECT e.event_id, count(client_id) AS client_count
+      FROM event e 
+      LEFT JOIN event_sign_up esu ON esu.event_id = e.event_id 
+      GROUP BY e.event_id
+      HAVING e."age_range" = '${req.query.age}' AND e."event_type" = '${req.query.type}') AS esu`)
+    res.status(200).json({ eventStats: eventStats.rows[0] })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+
+const getClientEventStats = async (_, res) => {
+  try {
+    const promiseArr = [
+      db.client.query(`
+      SELECT csu.age_range, ROUND(AVG(csu.count)) AS count
+      FROM 
+        (SELECT
+          c.client_id,
+          COUNT(c.client_id),
+          CASE 
+            WHEN c.age <= 11 THEN 'child'
+            WHEN c.age > 11 AND c.age < 18 THEN 'youth'
+            WHEN c.age >= 18 THEN 'adult'
+          END AS age_range
+        FROM account a, client c, event_sign_up esu
+        WHERE a.username = c.username
+        AND a."account_type" = 'client'
+        AND esu.client_id = c.client_id 
+        GROUP BY c.client_id) AS csu 
+      GROUP BY csu.age_range`),
+      db.client.query(`
+        SELECT esu1.client_id, ac.first_name, ac.last_name 
+        FROM event_sign_up AS esu1
+        LEFT JOIN client c ON c.client_id = esu1.client_id 
+        LEFT JOIN account ac ON ac.username = c.username
+        WHERE NOT EXISTS (
+          (SELECT event_id FROM event)
+          EXCEPT
+          (SELECT esu2.event_id FROM event_sign_up esu2 WHERE esu1.client_id = esu2.client_id))
+        GROUP BY esu1.client_id, ac.first_name, ac.last_name`)
+    ]
+    const [avgSignUpPerAgeGroup, accountWithAllSignedUp] = await Promise.all(promiseArr)
+    res.status(200).json({
+      avgSignUpPerAgeGroup: avgSignUpPerAgeGroup.rows,
+      accountWithAllSignedUp: accountWithAllSignedUp.rows,
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const deleteEvent = async (req, res) => {
+  try {
+    if (req.query.eventId) {
+      const result = await db.client.query(`DELETE FROM event WHERE event_id = ${Number(req.query.eventId)} RETURNING *`);
+      res.status(200).json({ event: result.rows[0] })
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+
 const register = async (req, res) => {
   try {
     await db.client.query(`INSERT INTO event_sign_up (client_id, event_id) VALUES (${Number(req.query.typeSpecificId)}, ${Number(req.query.eventId)})`);
@@ -125,6 +228,10 @@ const register = async (req, res) => {
 export default {
   getEvents,
   getPastEvents,
+  getEventStats,
+  getClientEventStats,
+  getAllUpcomingEvents,
   register,
+  deleteEvent,
 }
 
