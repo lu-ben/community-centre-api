@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS equipment (
 CREATE TABLE IF NOT EXISTS borrow_equipment (
   client_id INT,
   equipment_id INT,
-  borrow_date TIMESTAMP,
+  borrow_date TIMESTAMP DEFAULT NOW(),
   return_date TIMESTAMP,
   PRIMARY KEY (client_id, equipment_id, borrow_date),
   FOREIGN KEY (client_id) REFERENCES client (client_id) ON DELETE CASCADE,
@@ -140,3 +140,13 @@ CREATE TABLE IF NOT EXISTS go_to_unscheduled_drop_in (
   FOREIGN KEY (activity) REFERENCES unscheduled_drop_in (activity) ON DELETE CASCADE,
   FOREIGN KEY (client_id) REFERENCES client (client_id) ON DELETE CASCADE
 );
+
+CREATE VIEW client_with_age_ranges AS
+  SELECT 
+    *, 
+    CASE 
+      WHEN c.age <= 11 THEN 'child'
+      WHEN c.age > 11 AND c.age < 18 THEN 'youth'
+      WHEN c.age >= 18 THEN 'adult'
+    END AS age_range 
+  FROM client c
