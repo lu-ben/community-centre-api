@@ -21,13 +21,13 @@ const login = async (req, res) => {
       res.status(500).json({ error: { message: ERROR.IC } })
     }
   } catch (err) {
+    console.log(err)
     res.status(500).json(err)
   }
 }
 
 const signup = async (req, res) => {
   try {
-
     const {
       username,
       firstName,
@@ -51,6 +51,36 @@ const signup = async (req, res) => {
       res.status(500).json({ error: { message: ERROR.RFE } })
     }
   } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+
+const accounts = async (req, res) => {
+  const {
+    accountTypeSelected: accountType,
+    ageSelected: age,
+    roleSelected: role,
+  } = req.query
+
+  const alias = accountType === 'Client' ? 'c' : 'e'
+  const table = accountType === 'Client' ? `client_with_age_ranges ${alias}` : `employee ${alias}`
+  const projection = accountType === 'Client' ? 'c.client_id AS title, c.age_range, c.age' : 'e.employee_id AS title, e.role'
+
+  let filters = ''
+  if (accountType === 'Employee' && role && role !== 'All') filters = `WHERE e.role = '${role.toLowerCase()}'`
+  if (accountType === 'Client' && age && age !== 'All') filters = `WHERE c.age_range = '${age.toLowerCase()}'`
+
+  try {
+    const accounts = await db.client.query(`
+      SELECT a.username, a.first_name, a.last_name, a.account_type, ${projection}
+      FROM ${table}
+      LEFT JOIN account a ON ${alias}.username = a.username
+      ${filters}
+    `)
+    res.status(200).json({ accounts: accounts.rows })
+  } catch (err) {
+    console.log(err)
     res.status(500).json(err)
   }
 }
@@ -58,4 +88,5 @@ const signup = async (req, res) => {
 export default {
   login,
   signup,
+  accounts,
 }
