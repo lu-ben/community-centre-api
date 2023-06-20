@@ -85,8 +85,38 @@ const accounts = async (req, res) => {
   }
 }
 
+const updateUser = async (req, res) => {
+  try {
+    const {
+      title,
+      first_name,
+      last_name,
+      username,
+      age,
+      account_type,
+    } = req.query
+
+    if (title && first_name && last_name && username) {
+      if(account_type === 'client') {
+        await db.client.query(`UPDATE client SET age = ${Number(age)} WHERE client_id = ${Number(title)}`);
+      }
+      if(account_type === 'employee') {
+        await db.client.query(`UPDATE employee SET role = '${req.query.role}' WHERE employee_id = ${Number(title)}`);
+      }
+      await db.client.query(`UPDATE account SET first_name = '${first_name}', last_name = '${last_name}' WHERE username = '${username}'`);
+      res.status(200).json({});
+    } else {
+      res.status(500).json({ error: { message: ERROR.RFE } })
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+
 export default {
   login,
   signup,
   accounts,
+  updateUser,
 }
