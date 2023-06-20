@@ -6,3 +6,4 @@ export const accountRouter = express.Router();
 accountRouter.get('/login', accountController.login)
 accountRouter.get('/signup', accountController.signup)
 accountRouter.get('/', accountController.accounts)
+accountRouter.post('/updateUser', accountController.updateUser)
