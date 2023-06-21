@@ -25,6 +25,17 @@ INSERT INTO account VALUES ('adult2', 'Adult', 'Two', 1234, 'client');
 INSERT INTO account VALUES ('adult3', 'Adult', 'Three', 1234, 'client');
 INSERT INTO account VALUES ('adult4', 'Adult', 'Four', 1234, 'client');
 INSERT INTO account VALUES ('adult5', 'Adult', 'Five', 1234, 'client');
+INSERT INTO account VALUES ('potterboy72', 'Harry', 'Potter', 1234, 'client');
+INSERT INTO account VALUES ('chocolate', 'Charlie', 'Song', 1234, 'client');
+INSERT INTO account VALUES ('garen', 'Garen', 'Top', 1234, 'client');
+INSERT INTO account VALUES ('pstar32', 'Patrick', 'Star', 1234, 'client');
+INSERT INTO account VALUES ('mario', 'Mario', 'Mushroom', 1234, 'client');
+INSERT INTO account VALUES ('luigi', 'Luigi', 'Mushroom', 1234, 'client');
+INSERT INTO account VALUES ('steve24', 'Steve', 'Chow', 1234, 'client');
+INSERT INTO account VALUES ('james18', 'James', 'Lee', 1234, 'client');
+INSERT INTO account VALUES ('johnnyboy', 'John', 'Doe', 1234, 'client');
+INSERT INTO account VALUES ('darren', 'Darren', 'Song', 1234, 'client');
+INSERT INTO account VALUES ('bowser12', 'Bowser', 'Shell', 1234, 'employee');
 
 INSERT INTO client (age, username) VALUES (21, 'blu');
 INSERT INTO client (age, username) VALUES (20, 'kchua');
@@ -46,12 +57,23 @@ INSERT INTO client (age, username) VALUES (34, 'adult2');
 INSERT INTO client (age, username) VALUES (21, 'adult3');
 INSERT INTO client (age, username) VALUES (30, 'adult4');
 INSERT INTO client (age, username) VALUES (75, 'adult5');
+INSERT INTO client (age, username) VALUES (19, 'potterboy72');
+INSERT INTO client (age, username) VALUES (20, 'chocolate');
+INSERT INTO client (age, username) VALUES (20, 'garen');
+INSERT INTO client (age, username) VALUES (20, 'pstar32');
+INSERT INTO client (age, username) VALUES (20, 'mario');
+INSERT INTO client (age, username) VALUES (20, 'luigi');
+INSERT INTO client (age, username) VALUES (15, 'steve24');
+INSERT INTO client (age, username) VALUES (15, 'james18');
+INSERT INTO client (age, username) VALUES (15, 'johnnyboy');
+INSERT INTO client (age, username) VALUES (15, 'darren');
 
 INSERT INTO employee (role, username) VALUES ('manager', 'blu1');
 INSERT INTO employee (role, username) VALUES ('manager', 'kchua1');
 INSERT INTO employee (role, username) VALUES ('manager', 'rzou1');
 INSERT INTO employee (role, username) VALUES ('manager', 'jsmith');
 INSERT INTO employee (role, username) VALUES ('manager', 'msue');
+INSERT INTO employee (role, username) VALUES ('manager', 'bowser12');
 
 INSERT INTO bulletin_post (created_at, title, content, is_public, created_by, approved_by) VALUES ('2023-06-11 13:40:00', 'Lost Cat', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.', false, 5, null);
 INSERT INTO bulletin_post (created_at, title, content, is_public, created_by, approved_by) VALUES ('2023-06-11 13:40:00', 'Lost Dog', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.', false, 4, null);
@@ -95,6 +117,21 @@ INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES 
 INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 13:30:00', 24, 'Gymnasium B', 'drop-in');
 INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 14:30:00', 20, 'Gymnasium B', 'drop-in');
 INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-06-13 15:30:00', 24, 'Gymnasium B', 'drop-in');
+
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('adult', '2023-07-25 13:30:00', 20, 'Weight Room', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-07-25 12:30:00', 20, 'Weight Room', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES 
+('youth', '2023-07-23 12:30:00', 20, 'Studio B', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES 
+('all', '2023-07-23 11:30:00', 24, 'Studio B', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES 
+('youth', '2023-07-12 11:30:00', 20, 'Combatant Room', 'program');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES 
+('all', '2023-07-12 12:30:00', 20, 'Combatant Room', 'program');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('child', '2023-07-30 12:30:00', 24, 'Studio A', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('all', '2023-07-30 13:30:00', 24, 'Studio A', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('child', '2023-07-25 12:30:00', 20, 'Swimming Pool', 'drop-in');
+INSERT INTO event (age_range, date, capacity, facility_name, event_type) VALUES ('youth', '2023-07-25 13:30:00', 20, 'Swimming Pool', 'drop-in');
 
 /* ===== INSERT SECOND ===== */
 
@@ -181,6 +218,25 @@ INSERT INTO event_sign_up (client_id, event_id) VALUES (2, 17);
 INSERT INTO event_sign_up (client_id, event_id) VALUES (2, 18);
 INSERT INTO event_sign_up (client_id, event_id) VALUES (2, 19);
 INSERT INTO event_sign_up (client_id, event_id) VALUES (2, 20);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (11, 23);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (12, 23);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (13, 25);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (14, 25);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (15, 25);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (11, 30);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (12, 30);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (21, 21);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (22, 21);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (23, 21);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (24, 21);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (25, 21);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (26, 21);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (11, 22);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (21, 22);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (12, 24);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (13, 24);
+INSERT INTO event_sign_up (client_id, event_id) VALUES (22, 24); 
+INSERT INTO event_sign_up (client_id, event_id) VALUES (23, 24);
 
 INSERT INTO equipment VALUES (1, 'Frisbee', 'Gymnasium A');
 INSERT INTO equipment VALUES (2, 'Kan Jam Set', 'Gymnasium B');
