@@ -111,7 +111,7 @@ const createAnnouncement = async (req, res) => {
     } = req.query
 
     if (title && content && req.query.typeSpecificId) {
-      const result = await db.client.query(`INSERT INTO announcement (title, message, created_by) VALUES ('${title}', '${content}', ${Number(req.query.typeSpecificId)}) RETURNING *`);
+      const result = await db.client.query(`INSERT INTO announcement (title, message, created_by) VALUES ('${title}', '${content}', ${Number(req.query.typeSpecificId)}) RETURNING announcement_id`);
       const announcementId = result.rows[0].announcement_id;
 
       if (facilityNames !== undefined) {
