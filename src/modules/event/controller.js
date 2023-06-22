@@ -67,44 +67,35 @@ const getEvents = async (req, res) => {
 const getPastEvents = async (req, res) => {
   const displayColumns = req.query.displayColumns && req.query.displayColumns.length > 0 ? `${req.query.displayColumns.join(',')},` : ''
   try {
-    const eventQuery = req.query.accountType === 'employee'
-      ? `SELECT 
-          p.program_name AS title, 
-          e.facility_name AS location,
-          e.date 
-        FROM event e
-        LEFT JOIN program p 
-        ON e.event_id = p.event_id 
-        WHERE instructed_by = ${Number(req.query.typeSpecificId)}`
-      : `SELECT
+    const eventQuery =
+      `SELECT
           ${displayColumns}
           pe.title 
-        FROM 
-          (
-            (SELECT
-              CASE WHEN e.event_type = 'program' THEN p.program_name
-              ELSE CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in') END AS title,
-              date,
-              facility_name,
-              event_type::varchar,
-              age_range::varchar
-            FROM (SELECT event_id FROM event_sign_up WHERE client_id = ${req.query.typeSpecificId}) AS sue
-            LEFT JOIN event e ON sue.event_id = e.event_id
-            LEFT JOIN program p ON e.event_id = p.event_id
-            LEFT JOIN drop_in d ON d.event_id = e.event_id
-            WHERE  DATE(e.date) < DATE(NOW()))
-          UNION ALL
-            (SELECT
-              gt.activity AS title,
-              date,
-              ud.facility_name,
-              'unscheduled' AS event_type,
-              'all' AS age_range
-            FROM (SELECT * FROM go_to_unscheduled_drop_in WHERE client_id = ${req.query.typeSpecificId} AND DATE(date) < DATE(now())) AS gt
-            LEFT JOIN unscheduled_drop_in ud ON gt.activity = ud.activity))
-        AS pe
-        ORDER BY date DESC
-        `
+      FROM 
+        (
+          (SELECT
+            CASE WHEN e.event_type = 'program' THEN p.program_name
+            ELSE CONCAT(CONCAT(UPPER(LEFT(d.sport::text,1)), LOWER(RIGHT(d.sport::text,LENGTH(d.sport::text)-1))),' ', 'Drop-in') END AS title,
+            date,
+            facility_name,
+            event_type::varchar,
+            age_range::varchar
+          FROM (SELECT event_id FROM event_sign_up WHERE client_id = ${req.query.typeSpecificId}) AS sue
+          LEFT JOIN event e ON sue.event_id = e.event_id
+          LEFT JOIN program p ON e.event_id = p.event_id
+          LEFT JOIN drop_in d ON d.event_id = e.event_id
+          WHERE  DATE(e.date) < DATE(NOW()))
+      UNION ALL
+        (SELECT
+          gt.activity AS title,
+          date,
+          ud.facility_name,
+          'unscheduled' AS event_type,
+          'all' AS age_range
+        FROM (SELECT * FROM go_to_unscheduled_drop_in WHERE client_id = ${req.query.typeSpecificId} AND DATE(date) < DATE(now())) AS gt
+        LEFT JOIN unscheduled_drop_in ud ON gt.activity = ud.activity))
+      AS pe
+      ORDER BY date DESC`
     const events = await db.client.query(eventQuery)
     res.status(200).json({ events: events.rows })
   } catch (err) {
