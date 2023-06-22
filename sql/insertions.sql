@@ -141,6 +141,8 @@ INSERT INTO program VALUES (12, 'Badminton Lesson', 'one-time', 1);
 INSERT INTO program VALUES (13, 'Badminton Lesson', 'one-time', 1);
 INSERT INTO program VALUES (14, 'Basketball Lesson', 'one-time', 1);
 INSERT INTO program VALUES (15, 'Volleyball Lesson', 'one-time', 2);
+INSERT INTO program VALUES (25, 'Tae Kwon Do Lessson', 'one-time', 3);
+INSERT INTO program VALUES (26, 'Karate Lesson', 'one-time', 6);
 
 INSERT INTO drop_in VALUES (6, 'volleyball');
 INSERT INTO drop_in VALUES (7, 'badminton');
@@ -150,8 +152,15 @@ INSERT INTO drop_in VALUES (10, 'badminton');
 INSERT INTO drop_in VALUES (16, 'volleyball');
 INSERT INTO drop_in VALUES (17, 'badminton');
 INSERT INTO drop_in VALUES (18, 'basketball');
-INSERT INTO drop_in VALUES (19, 'volleyball');
 INSERT INTO drop_in VALUES (20, 'badminton');
+INSERT INTO drop_in VALUES (21, 'badminton');
+INSERT INTO drop_in VALUES (22, 'badminton');
+INSERT INTO drop_in VALUES (23, 'pickleball');
+INSERT INTO drop_in VALUES (24, 'pickleball');
+INSERT INTO drop_in VALUES (27, 'volleyball');
+INSERT INTO drop_in VALUES (28, 'badminton');
+INSERT INTO drop_in VALUES (29, 'volleyball');
+INSERT INTO drop_in VALUES (30, 'badminton');
 
 INSERT INTO event_price VALUES ('child', 20, 3);
 INSERT INTO event_price VALUES ('youth', 20, 5);
