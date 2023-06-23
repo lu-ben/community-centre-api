@@ -12,9 +12,8 @@ const getEvents = async (req, res) => {
     } if (!eventType && ageRange) {
       filters = `WHERE es.age_range = '${req.query.selectedAgeRange.toLowerCase()}'`
     }
-    const eventQuery = req.query.accountType === 'employee'
-      ? `SELECT p.program_name AS title, e.facility_name AS subtitle, e.date FROM event e LEFT JOIN program p ON e.event_id = p.event_id WHERE instructed_by = ${Number(req.query.typeSpecificId)}`
-      : `SELECT
+    const eventQuery =
+      `SELECT
           es.event_id AS id,
           es.date,
           es.subtitle,
@@ -146,7 +145,7 @@ const getEventStats = async (req, res) => {
       FROM event e 
       LEFT JOIN event_sign_up esu ON esu.event_id = e.event_id 
       GROUP BY e.event_id
-      HAVING e."age_range" = '${req.query.age}' AND e."event_type" = '${req.query.type}') AS esu`)
+      HAVING e."event_type" = '${req.query.type}') AS esu`)
     res.status(200).json({ eventStats: eventStats.rows[0] })
   } catch (err) {
     console.log(err)

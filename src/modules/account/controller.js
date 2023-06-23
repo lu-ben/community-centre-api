@@ -66,6 +66,7 @@ const accounts = async (req, res) => {
   const alias = accountType === 'Client' ? 'c' : 'e'
   const table = accountType === 'Client' ? `client_with_age_ranges ${alias}` : `employee ${alias}`
   const projection = accountType === 'Client' ? 'c.client_id AS title, c.age_range, c.age' : 'e.employee_id AS title, e.role'
+  const sort = accountType === 'Client' ? 'c.client_id' : 'e.employee_id'
 
   let filters = ''
   if (accountType === 'Employee' && role && role !== 'All') filters = `WHERE e.role = '${role.toLowerCase()}'`
@@ -77,6 +78,7 @@ const accounts = async (req, res) => {
       FROM ${table}
       LEFT JOIN account a ON ${alias}.username = a.username
       ${filters}
+      ORDER BY ${sort}
     `)
     res.status(200).json({ accounts: accounts.rows })
   } catch (err) {
@@ -97,10 +99,10 @@ const updateUser = async (req, res) => {
     } = req.query
 
     if (title && first_name && last_name && username) {
-      if(account_type === 'client') {
+      if (account_type === 'client') {
         await db.client.query(`UPDATE client SET age = ${Number(age)} WHERE client_id = ${Number(title)}`);
       }
-      if(account_type === 'employee') {
+      if (account_type === 'employee') {
         await db.client.query(`UPDATE employee SET role = '${req.query.role}' WHERE employee_id = ${Number(title)}`);
       }
       await db.client.query(`UPDATE account SET first_name = '${first_name}', last_name = '${last_name}' WHERE username = '${username}'`);

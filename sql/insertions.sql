@@ -186,6 +186,7 @@ INSERT INTO event_sign_up VALUES (1, 14, '2023-06-11 17:19:00');
 INSERT INTO event_sign_up VALUES (1, 15, '2023-06-11 17:19:00');
 INSERT INTO event_sign_up VALUES (1, 16, '2023-06-11 17:19:00');
 INSERT INTO event_sign_up VALUES (1, 17, '2023-06-11 17:19:00');
+INSERT INTO event_sign_up VALUES (1, 18, '2023-06-11 17:19:00');
 INSERT INTO event_sign_up (client_id, event_id) VALUES (3, 1);
 INSERT INTO event_sign_up (client_id, event_id) VALUES (4, 1);
 INSERT INTO event_sign_up (client_id, event_id) VALUES (5, 1);
